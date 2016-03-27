@@ -1,0 +1,17 @@
+HW2 Reflections
+
+I was working on the assignment by myself. 
+
+There are a couple of things which were rather difficult:
+
+1. Conditionally setting the class of the html element in haml
+    - It is most immediatedly obvious how to do this in the docs
+    - But stack overflow have answers
+2. Making the index action of the movies controller truly RESTful, 
+meaning that the URI will contain all the information needed to process
+the request in the params. Of course there are certain cases where params
+will be empty and hence the params will be nil. At first, I was confused as to
+how to handle this, but after thinking about it, it is quite clear that we need to default to the original setting which is sort by id and select all ratings and redirect accordingly. The discussion forum helped a lot to. 
+
+3. My assumption that the redirection action works like "return" statement
+where it will just ignore the code below it is wrong. The code beneath it will still be executed after the redirect action
