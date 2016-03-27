@@ -13,26 +13,20 @@ class MoviesController < ApplicationController
   #default setting is sort by id and select all checkbox
  
  def index
+  
   @all_ratings = Movie.all_ratings.keys
-   
-  @sort = params[:sort] || session[:sort]
-  @ratings = params[:ratings] || session[:ratings]
-  
-  if @sort.nil? and @ratings.nil?
+
+  if params[:sort].nil? || params[:ratings].nil? 
+    sort_param = params[:sort] || session[:sort] || :id
+    ratings_param = params[:ratings] || session[:ratings] || Movie.all_ratings
     flash.keep
-    redirect_to movies_path(sort: :id, ratings: Movie.all_ratings)
-  elsif @sort.nil? and @ratings
-    flash.keep  
-    redirect_to movies_path(sort: :id, ratings: @ratings)
-  elsif @ratings.nil? and @sort
-    flash.keep
-    redirect_to movies_path(sort: @sort, ratings: Movie.all_ratings)
+    redirect_to movies_path(sort: sort_param, ratings: ratings_param) 
   else
+    @sort = session[:sort] = params[:sort]
+    @ratings = session[:ratings] = params[:ratings]
     @movies = Movie.all.where(rating: @ratings.keys).order(@sort)
-    session[:sort] = @sort
-    session[:ratings] = @ratings
-  end 
-  
+  end
+    
  end 
  
 
