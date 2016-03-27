@@ -10,23 +10,31 @@ class MoviesController < ApplicationController
     # will render app/views/movies/show.<extension> by default
   end
 
-  def index
-    @sort = params[:sort]
-    @all_ratings = Movie.all_ratings
-    if params[:ratings].nil?
-      @checked = []
-      @movies = Movie.all
-    else
-      @checked = params[:ratings].keys
-      @movies = Movie.where(rating: @checked)
-    end
-      
-    if @sort == 'title'
-      @movies = @movies.order(:title)
-    elsif @sort == 'release_date'
-       @movies = @movies.all.order(:release_date) 
-    end
-  end
+  #default setting is sort by id and select all checkbox
+ 
+ def index
+  @all_ratings = Movie.all_ratings.keys
+   
+  @sort = params[:sort] || session[:sort]
+  @ratings = params[:ratings] || session[:ratings]
+  
+  if @sort.nil? and @ratings.nil?
+    flash.keep
+    redirect_to movies_path(sort: :id, ratings: Movie.all_ratings)
+  elsif @sort.nil? and @ratings
+    flash.keep  
+    redirect_to movies_path(sort: :id, ratings: @ratings)
+  elsif @ratings.nil? and @sort
+    flash.keep
+    redirect_to movies_path(sort: @sort, ratings: Movie.all_ratings)
+  else
+    @movies = Movie.all.where(rating: @ratings.keys).order(@sort)
+    session[:sort] = @sort
+    session[:ratings] = @ratings
+  end 
+  
+ end 
+ 
 
   def new
     # default: render 'new' template
@@ -55,5 +63,5 @@ class MoviesController < ApplicationController
     flash[:notice] = "Movie '#{@movie.title}' deleted."
     redirect_to movies_path
   end
-
+  
 end
