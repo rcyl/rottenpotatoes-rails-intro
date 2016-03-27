@@ -15,3 +15,5 @@ how to handle this, but after thinking about it, it is quite clear that we need 
 
 3. My assumption that the redirection action works like "return" statement
 where it will just ignore the code below it is wrong. The code beneath it will still be executed after the redirect action
+
+4. At first the all ratings in the movie model returns an array of ratings, but this does not tally with what the params return. To make the code a bit cleaner, the array is converted to a hash value
